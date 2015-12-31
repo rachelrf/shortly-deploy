@@ -3,6 +3,11 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      dist: {
+        // src: ['app/*.js','db/*.js', 'lib/*.js', 'node_modules/*.js','public/*.js', 'test/*.js', 'views/*.js'],
+        src: ['public/client/*.js'],
+        dest: 'public/client/build.js'
+      }
     },
 
     mochaTest: {
@@ -21,11 +26,15 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+        build: {
+            src: 'build.js',
+            dest: 'public/client/buildmin.js'
+        }
     },
 
     jshint: {
       files: [
-        // Add filespec list here
+        'build.js'
       ],
       options: {
         force: 'true',
@@ -72,6 +81,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
 
+
+
   grunt.registerTask('server-dev', function (target) {
     // Running nodejs in a different process and displaying output on the main console
     var nodemon = grunt.util.spawn({
@@ -108,5 +119,6 @@ module.exports = function(grunt) {
     // add your deploy tasks here
   ]);
 
+  grunt.registerTask('default', ['concat', "uglify", 'jshint', 'mochaTest']); // added to make work :(
 
 };
